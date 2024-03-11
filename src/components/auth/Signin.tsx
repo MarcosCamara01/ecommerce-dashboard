@@ -76,7 +76,7 @@ const Signin = () => {
 
         <div className="relative flex items-center justify-center w-full h-10">
           <div className="absolute h-px w-full top-2/4 bg-gray-400"></div>
-          <p className="w-8	h-6 bg-white text-gray-400 z-10 text-xs flex items-center justify-center">OR</p>
+          <p className="w-8	h-6 bg-white text-gray-900 z-10 text-xs flex items-center justify-center">OR</p>
         </div>
 
         <button

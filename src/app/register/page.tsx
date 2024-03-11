@@ -9,7 +9,7 @@ const Register = async () => {
   const session: Session | null = await getServerSession(authOptions);
 
   if (session) {
-    redirect('/');
+    redirect('/orders');
   } else {
     return (
       <Signup />
