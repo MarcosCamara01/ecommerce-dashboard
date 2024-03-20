@@ -13,8 +13,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import { Button } from "@/components/ui/button";
+import { SignOutButton } from '../auth/SignOutButton';
 
 const Header = async ({ title }: { title: string }) => {
     const session: Session | null = await getServerSession(authOptions);
@@ -51,10 +51,17 @@ const Header = async ({ title }: { title: string }) => {
                 <DropdownMenuContent align="end">
                     <DropdownMenuLabel>My Account</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                    {
+                        session?.user?.email === "marcospenelascamara@gmail.com" ?
+                            <DropdownMenuItem>Add new user</DropdownMenuItem>
+                            : ""
+                    }
+                    <DropdownMenuItem>Edit profile</DropdownMenuItem>
                     <DropdownMenuItem>Support</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                    <DropdownMenuItem>
+                        <SignOutButton />
+                    </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </header>

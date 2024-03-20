@@ -6,7 +6,6 @@ import Sidebar from "@/components/common/Sidebar";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/libs/auth";
 import { Session } from "next-auth";
-import { Logout } from "@/components/auth/Logout";
 
 const inter = Inter({ subsets: ["latin"] });
 

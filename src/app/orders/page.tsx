@@ -1,6 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
+import {
+    DropdownMenuTrigger,
+    DropdownMenuItem,
+    DropdownMenuContent,
+    DropdownMenu
+} from "@/components/ui/dropdown-menu";
+import {
+    TableHead,
+    TableRow,
+    TableHeader,
+    TableCell,
+    TableBody,
+    Table
+} from "@/components/ui/table";
 import { FiMoreHorizontal } from "react-icons/fi";
 import Header from "@/components/common/Header";
 import { getOrders } from "../action";
@@ -17,7 +29,7 @@ export default async function Orders() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[100px]">Order</TableHead>
+                                <TableHead className="w-[100px]">Order Number</TableHead>
                                 <TableHead className="min-w-[150px]">Customer</TableHead>
                                 <TableHead className="hidden md:table-cell">Date</TableHead>
                                 <TableHead className="min-w-[100px]">Total</TableHead>
@@ -46,7 +58,7 @@ export default async function Orders() {
                                                     order.receipt_url ?
                                                         <DropdownMenuItem>
                                                             <Link className="w-full h-full" href={order.receipt_url} target="_blank">
-                                                                View receipt 
+                                                                View receipt
                                                             </Link>
                                                         </DropdownMenuItem>
                                                         : ""

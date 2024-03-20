@@ -1,11 +1,16 @@
 import React from 'react';
-import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
-import { DropdownMenuTrigger, DropdownMenuItem, DropdownMenuContent, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { FiMoreHorizontal } from "react-icons/fi";
+import {
+    TableHead,
+    TableRow,
+    TableHeader,
+    TableCell,
+    TableBody,
+    Table
+} from "@/components/ui/table";
 import Header from '@/components/common/Header';
 import { getProducts } from '../action';
 import Image from 'next/image';
+import ProductMenu from '@/components/ProductMenu';
 
 export default async function Products() {
     const products = await getProducts();
@@ -45,18 +50,7 @@ export default async function Products() {
                                         <TableCell>{new Date(product.created * 1000).toLocaleDateString()}</TableCell>
                                         <TableCell className="hidden md:table-cell">{new Date(product.updated * 1000).toLocaleDateString()}</TableCell>
                                         <TableCell className="text-right">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button size="icon" variant="ghost">
-                                                        <FiMoreHorizontal className="w-4 h-4" />
-                                                        <span className="sr-only">Actions</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem>Edit product</DropdownMenuItem>
-                                                    <DropdownMenuItem>Delete product</DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                            <ProductMenu product={product} />
                                         </TableCell>
                                     </TableRow>
                                 ))}
