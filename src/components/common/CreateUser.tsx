@@ -70,33 +70,33 @@ const CreateUser = () => {
                     />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="mongodbKey" className="text-right">
+                    <Label htmlFor="mongodb_key" className="text-right">
                         MongoDB
                     </Label>
                     <Input
-                        id="mongodbKey"
+                        id="mongodb_key"
                         className="col-span-3"
-                        onChange={(e) => setUser({ ...user, mongodbKey: e.target.value })}
+                        onChange={(e) => setUser({ ...user, mongodb_key: e.target.value })}
                     />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="stripeSecret" className="text-right">
+                    <Label htmlFor="stripe_secret" className="text-right">
                         Secret
                     </Label>
                     <Input
-                        id="stripeSecret"
+                        id="stripe_secret"
                         className="col-span-3"
-                        onChange={(e) => setUser({ ...user, stripeSecret: e.target.value })}
+                        onChange={(e) => setUser({ ...user, stripe_secret: e.target.value })}
                     />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="stripePublic" className="text-right">
+                    <Label htmlFor="stripe_public" className="text-right">
                         Public
                     </Label>
                     <Input
-                        id="stripePublic"
+                        id="stripe_public"
                         className="col-span-3"
-                        onChange={(e) => setUser({ ...user, stripePublic: e.target.value })}
+                        onChange={(e) => setUser({ ...user, stripe_public: e.target.value })}
                     />
                 </div>
             </div>

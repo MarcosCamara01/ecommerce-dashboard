@@ -7,7 +7,6 @@ import {
     TableBody,
     Table
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button"
 import Header from '@/components/common/Header';
 import { getProducts } from '../action';
 import Image from 'next/image';

@@ -4,9 +4,9 @@ export interface UserDocument {
   email: string;
   password: string;
   name: string;
-  mongodbKey: string;
-  stripeSecret: string;
-  stripePublic: string;
+  mongodb_key: string;
+  stripe_secret: string;
+  stripe_public: string;
   _id: string;
   createdAt: Date;
   updatedAt: Date;
@@ -33,15 +33,15 @@ const UserSchema = new Schema<UserDocument>({
     minLength: [3, "fullname must be at least 3 characters"],
     maxLength: [25, "fullname must be at most 25 characters"],
   },
-  mongodbKey: {
+  mongodb_key: {
     type: String,
     required: [true, "MongoDB URI is required"],
   },
-  stripeSecret: {
+  stripe_secret: {
     type: String,
     required: [true, "Stripe Secret is required"],
   },
-  stripePublic: {
+  stripe_public: {
     type: String,
     required: [true, "Stripe Public is required"],
   },

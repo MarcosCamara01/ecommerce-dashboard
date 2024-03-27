@@ -5,7 +5,7 @@ import { Session } from "next-auth";
 
 export const userDb = async () => {
   const session: Session | null = await getServerSession(authOptions);
-  const MONGODB_URI = session?.user.mongodbKey;
+  const MONGODB_URI = session?.user.mongodb_key;
 
   if (!MONGODB_URI) {
     throw new Error("MONGODB_URI not found");

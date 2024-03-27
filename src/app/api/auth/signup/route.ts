@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     await myDb();
 
-    const { name, email, password, mongodbKey, stripeSecret, stripePublic } = await request.json();
+    const { name, email, password, mongodb_key, stripe_secret, stripe_public } = await request.json();
 
     if (password.length < 6) {
       return NextResponse.json(
@@ -32,9 +32,9 @@ export async function POST(request: Request) {
       name,
       email,
       password: hashedPassword,
-      mongodbKey,
-      stripeSecret,
-      stripePublic
+      mongodb_key,
+      stripe_secret,
+      stripe_public
     });
 
     const savedUser = await user.save();
@@ -65,7 +65,7 @@ export async function PUT(request: Request) {
   try {
     await myDb();
 
-    const { userId, name, email, password } = await request.json();
+    const { userId, name, email, password, mongodb_key, stripe_secret, stripe_public } = await request.json();
 
     if (password && password.length < 6) {
       return NextResponse.json(
@@ -89,6 +89,18 @@ export async function PUT(request: Request) {
 
     if (email) {
       userToUpdate.email = email;
+    }
+
+    if (mongodb_key) {
+      userToUpdate.mongodb_key = mongodb_key;
+    }
+
+    if (stripe_secret) {
+      userToUpdate.stripe_secret = stripe_secret;
+    }
+
+    if (stripe_public) {
+      userToUpdate.stripe_public = stripe_public;
     }
 
     if (password) {

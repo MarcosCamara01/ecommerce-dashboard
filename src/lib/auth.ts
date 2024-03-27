@@ -52,8 +52,8 @@ export const authOptions: NextAuthOptions  = {
         return {
           ...token,
           id: u.id,
-          mongodbKey: u.mongodbKey,
-          stripeSecret: u.stripeSecret,
+          mongodb_key: u.mongodb_key,
+          stripe_secret: u.stripe_secret,
           stripePublic: u.stripePublic,
         };
       }
@@ -66,9 +66,9 @@ export const authOptions: NextAuthOptions  = {
           ...session.user,
           _id: token.id,
           name: token.name,
-          mongodbKey: token.mongodbKey,
-          stripeSecret: token.stripeSecret,
-          stripePublic: token.stripePublic,
+          mongodb_key: token.mongodb_key,
+          stripe_secret: token.stripe_secret,
+          stripe_public: token.stripe_public,
         }
       };
     },
