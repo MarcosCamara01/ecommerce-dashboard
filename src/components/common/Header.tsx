@@ -1,9 +1,7 @@
-
-import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/libs/auth";
+import { authOptions } from "@/lib/auth";
 import { Session } from "next-auth";
 import {
     DropdownMenu,
@@ -13,8 +11,13 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button";
 import { SignOutButton } from '../auth/SignOutButton';
+import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import CreateUser from './CreateUser';
 
 const Header = async ({ title }: { title: string }) => {
     const session: Session | null = await getServerSession(authOptions);
@@ -30,40 +33,42 @@ const Header = async ({ title }: { title: string }) => {
             <div className="w-full flex-1" data-id="20">
                 <h1 className="font-semibold text-sm md:text-base lg:text-xl" data-id="21">{title}</h1>
             </div>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button
-                        className="rounded-full overflow-hidden w-[32px] h-[32px]"
-                        size="icon"
-                        variant="ghost"
-                    >
-                        {session?.user?.image && session.user.name ?
-                            <Image
-                                src={session?.user?.image}
-                                alt={session?.user?.name}
-                                width={32}
-                                height={32}
-                            />
-                            : firstLetter}
-                        <span className="sr-only">Toggle user menu</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {
-                        session?.user?.email === "marcospenelascamara@gmail.com" ?
-                            <DropdownMenuItem>Add new user</DropdownMenuItem>
-                            : ""
-                    }
-                    <DropdownMenuItem>Edit profile</DropdownMenuItem>
-                    <DropdownMenuItem>Support</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <SignOutButton />
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Dialog>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            className="rounded-full overflow-hidden w-[32px] h-[32px] border border-gray-200"
+                            size="icon"
+                            variant="ghost"
+                        >
+                            {firstLetter}
+                            <span className="sr-only">Toggle user menu</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {
+                            session?.user?.email === "marcospenelascamara@gmail.com" ?
+                                <DropdownMenuItem>
+                                    <DialogTrigger asChild>
+                                        <button className='w-full h-full text-left'>
+                                            New user
+                                        </button>
+                                    </DialogTrigger>
+                                </DropdownMenuItem>
+                                : ""
+                        }
+                        <DropdownMenuItem>Edit profile</DropdownMenuItem>
+                        <DropdownMenuItem>Support</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                            <SignOutButton />
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+                <CreateUser />
+            </Dialog>
         </header>
     )
 }

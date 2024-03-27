@@ -1,4 +1,4 @@
-import { connectDB } from "../../../../libs/mongoose";
+import { myDb } from "../../../../lib/myDb";
 import User from "../../../../models/User";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -6,9 +6,9 @@ import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   try {
-    await connectDB();
+    await myDb();
 
-    const { name, email, password } = await request.json();
+    const { name, email, password, mongodbKey, stripeSecret, stripePublic } = await request.json();
 
     if (password.length < 6) {
       return NextResponse.json(
@@ -32,6 +32,9 @@ export async function POST(request: Request) {
       name,
       email,
       password: hashedPassword,
+      mongodbKey,
+      stripeSecret,
+      stripePublic
     });
 
     const savedUser = await user.save();
@@ -60,7 +63,7 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    await connectDB();
+    await myDb();
 
     const { userId, name, email, password } = await request.json();
 
@@ -70,7 +73,7 @@ export async function PUT(request: Request) {
         { status: 400 }
       );
     }
-    
+
     const userToUpdate = await User.findById(userId);
 
     if (!userToUpdate) {
@@ -125,7 +128,7 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    await connectDB();
+    await myDb();
 
     const { userId } = await request.json();
 
@@ -137,7 +140,7 @@ export async function DELETE(request: Request) {
         { status: 404 }
       );
     }
-    
+
     await user.remove();
 
     return NextResponse.json(

@@ -73,21 +73,6 @@ const Signin = () => {
         >
           Sign in
         </button>
-
-        <div className="relative flex items-center justify-center w-full h-10">
-          <div className="absolute h-px w-full top-2/4 bg-gray-400"></div>
-          <p className="w-8	h-6 bg-white text-gray-900 z-10 text-xs flex items-center justify-center">OR</p>
-        </div>
-
-        <button
-          className="w-full h-10 justify-center flex py-1.5 px-4 text-sm align-middle items-center rounded text-999 bg-[#F4F4F5]  
-           transition duration-150 ease hover:bg-gray-200 gap-3"
-          onClick={(e) => {
-            e.preventDefault();
-            signIn("google")
-          }}>
-          <BiLogoGoogle className="text-2xl" /> Sign in with Google
-        </button>
         <Link href="/register" className="text-sm	text-gray-500 transition duration-150 ease hover:text-black">
           Don&apos;t have an account?
         </Link>

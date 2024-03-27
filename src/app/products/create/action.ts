@@ -1,4 +1,4 @@
-import { connectDB } from '@/libs/mongoose';
+import { userDb } from '@/lib/userDb';
 import { Product } from '@/models/Products';
 import { v2 as cloudinary } from 'cloudinary';
 import Stripe from "stripe";
@@ -45,7 +45,7 @@ export const saveImage = async (formData: any) => {
 
 export const saveProduct = async (dataToSave: Product) => {
     try {
-        connectDB();
+        userDb();
 
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
             apiVersion: '2023-10-16',

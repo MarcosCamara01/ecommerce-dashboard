@@ -6,7 +6,7 @@ if (!MONGODB_URI) {
   throw new Error("MONGODB_URI must be defined");
 }
 
-export const connectDB = async () => {
+export const myDb = async () => {
   try {
     const { connection } = await mongoose.connect(MONGODB_URI);
     if (connection.readyState === 1) {

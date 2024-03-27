@@ -1,16 +1,11 @@
-import { connectDB } from "../libs/mongoose";
+import { myDb } from "./myDb";
 import User from "../models/User";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions  = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
-    }),
     CredentialsProvider({
       name: "Credentials",
       id: "credentials",
@@ -19,7 +14,7 @@ export const authOptions: NextAuthOptions  = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        await connectDB();
+        await myDb();
         const userFound = await User.findOne({
           email: credentials?.email,
         }).select("+password");
@@ -57,6 +52,9 @@ export const authOptions: NextAuthOptions  = {
         return {
           ...token,
           id: u.id,
+          mongodbKey: u.mongodbKey,
+          stripeSecret: u.stripeSecret,
+          stripePublic: u.stripePublic,
         };
       }
       return token;
@@ -68,6 +66,9 @@ export const authOptions: NextAuthOptions  = {
           ...session.user,
           _id: token.id,
           name: token.name,
+          mongodbKey: token.mongodbKey,
+          stripeSecret: token.stripeSecret,
+          stripePublic: token.stripePublic,
         }
       };
     },
