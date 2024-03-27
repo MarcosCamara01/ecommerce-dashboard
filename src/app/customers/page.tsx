@@ -1,5 +1,12 @@
 import React from 'react';
-import { TableHead, TableRow, TableHeader, TableCell, TableBody, Table } from "@/components/ui/table";
+import {
+    TableHead,
+    TableRow,
+    TableHeader,
+    TableCell,
+    TableBody,
+    Table
+} from "@/components/ui/table";
 import Header from '@/components/common/Header';
 import { getCustomers } from '../action';
 
