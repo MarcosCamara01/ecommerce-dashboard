@@ -3,7 +3,6 @@ import mongoose, { model, Model, Schema } from 'mongoose';
 export interface Product {
     sizes: string[];
     variants: Variant[];
-    variantImages: string[][];
     image: string[];
     name: string;
     description: string;

@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from '@/lib/db';
 import { Product } from '@/models/Products';
 import { v2 as cloudinary } from 'cloudinary';
@@ -11,7 +13,7 @@ export const saveImage = async (formData: any) => {
     });
 
     try {
-        const data = await formData();
+        const data = await formData;
         const image: any = data.get("image");
 
         if (!image) {
@@ -44,6 +46,7 @@ export const saveImage = async (formData: any) => {
 }
 
 export const saveProduct = async (dataToSave: Product) => {
+    console.log(dataToSave)
     try {
         db();
 
