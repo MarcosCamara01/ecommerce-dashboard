@@ -6,6 +6,7 @@ import Sidebar from "@/components/common/Sidebar";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { Session } from "next-auth";
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,6 +37,7 @@ export default async function RootLayout({
                 {children}
               </main>
           }
+          <Toaster position="top-right" />
         </body>
       </Provider>
     </html>

@@ -1,4 +1,4 @@
-import { myDb } from "./myDb";
+import { db } from "./db";
 import User from "../models/User";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -14,7 +14,7 @@ export const authOptions: NextAuthOptions  = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        await myDb();
+        await db();
         const userFound = await User.findOne({
           email: credentials?.email,
         }).select("+password");
@@ -52,9 +52,6 @@ export const authOptions: NextAuthOptions  = {
         return {
           ...token,
           id: u.id,
-          mongodb_key: u.mongodb_key,
-          stripe_secret: u.stripe_secret,
-          stripePublic: u.stripePublic,
         };
       }
       return token;
@@ -66,9 +63,6 @@ export const authOptions: NextAuthOptions  = {
           ...session.user,
           _id: token.id,
           name: token.name,
-          mongodb_key: token.mongodb_key,
-          stripe_secret: token.stripe_secret,
-          stripe_public: token.stripe_public,
         }
       };
     },

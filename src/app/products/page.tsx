@@ -10,7 +10,7 @@ import {
 import Header from '@/components/common/Header';
 import { getProducts } from '../action';
 import Image from 'next/image';
-import ProductMenu from '@/components/ProductMenu';
+import ProductMenu from '@/components/products/ProductMenu';
 import Link from 'next/link';
 
 export default async function Products() {

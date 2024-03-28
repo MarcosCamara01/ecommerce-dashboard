@@ -17,7 +17,7 @@ import {
     Dialog,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import CreateUser from './CreateUser';
+import CreateUser from '../auth/CreateUser';
 
 const Header = async ({ title }: { title: string }) => {
     const session: Session | null = await getServerSession(authOptions);

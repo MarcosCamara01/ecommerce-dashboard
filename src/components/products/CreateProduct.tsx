@@ -1,5 +1,4 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import axios from 'axios';
 import Image from 'next/image';
 import { saveImage, saveProduct } from '@/app/products/create/action';
 import { Variant } from '@/models/Products';

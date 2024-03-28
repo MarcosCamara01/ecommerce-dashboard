@@ -69,36 +69,6 @@ const CreateUser = () => {
                         onChange={(e) => setUser({ ...user, password: e.target.value })}
                     />
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="mongodb_key" className="text-right">
-                        MongoDB
-                    </Label>
-                    <Input
-                        id="mongodb_key"
-                        className="col-span-3"
-                        onChange={(e) => setUser({ ...user, mongodb_key: e.target.value })}
-                    />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="stripe_secret" className="text-right">
-                        Secret
-                    </Label>
-                    <Input
-                        id="stripe_secret"
-                        className="col-span-3"
-                        onChange={(e) => setUser({ ...user, stripe_secret: e.target.value })}
-                    />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="stripe_public" className="text-right">
-                        Public
-                    </Label>
-                    <Input
-                        id="stripe_public"
-                        className="col-span-3"
-                        onChange={(e) => setUser({ ...user, stripe_public: e.target.value })}
-                    />
-                </div>
             </div>
             <DialogFooter>
                 <Button

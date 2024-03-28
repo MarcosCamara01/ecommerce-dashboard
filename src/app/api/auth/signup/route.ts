@@ -1,4 +1,4 @@
-import { myDb } from "../../../../lib/myDb";
+import { db } from "../../../../lib/db";
 import User from "../../../../models/User";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -6,9 +6,9 @@ import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   try {
-    await myDb();
+    await db();
 
-    const { name, email, password, mongodb_key, stripe_secret, stripe_public } = await request.json();
+    const { name, email, password } = await request.json();
 
     if (password.length < 6) {
       return NextResponse.json(
@@ -32,9 +32,6 @@ export async function POST(request: Request) {
       name,
       email,
       password: hashedPassword,
-      mongodb_key,
-      stripe_secret,
-      stripe_public
     });
 
     const savedUser = await user.save();
@@ -63,9 +60,9 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    await myDb();
+    await db();
 
-    const { userId, name, email, password, mongodb_key, stripe_secret, stripe_public } = await request.json();
+    const { userId, name, email, password } = await request.json();
 
     if (password && password.length < 6) {
       return NextResponse.json(
@@ -89,18 +86,6 @@ export async function PUT(request: Request) {
 
     if (email) {
       userToUpdate.email = email;
-    }
-
-    if (mongodb_key) {
-      userToUpdate.mongodb_key = mongodb_key;
-    }
-
-    if (stripe_secret) {
-      userToUpdate.stripe_secret = stripe_secret;
-    }
-
-    if (stripe_public) {
-      userToUpdate.stripe_public = stripe_public;
     }
 
     if (password) {
@@ -140,7 +125,7 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    await myDb();
+    await db();
 
     const { userId } = await request.json();
 

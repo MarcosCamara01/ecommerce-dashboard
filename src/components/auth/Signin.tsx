@@ -4,12 +4,11 @@ import { FormEvent, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useSession } from 'next-auth/react';
-import { BiLogoGoogle } from 'react-icons/bi';
 import { BiSolidShow } from 'react-icons/bi';
 import { BiSolidHide } from 'react-icons/bi';
+import { toast } from "sonner";
 
 const Signin = () => {
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { data: session } = useSession();
 
@@ -29,7 +28,7 @@ const Signin = () => {
     });
 
     if (res?.error) {
-      setError(res.error as string)
+      toast.error(res.error as string)
     };
   };
 
@@ -40,7 +39,6 @@ const Signin = () => {
          bg-white rounded text-black"
         onSubmit={handleSubmit}
       >
-        {error && <div className="">{error}</div>}
         <h1 className="w-full my-5 text-2xl font-bold">Welcome back</h1>
 
         <input
