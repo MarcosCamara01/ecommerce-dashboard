@@ -82,10 +82,12 @@ export const saveProduct = async (dataToSave: any) => {
                 return await saveImage(image);
             }));
 
+            const variantImages = variantImageUrls.map((imageUrl: string) => "/" + imageUrl.split('/').pop());
+
             const stripeVariant = await stripe.products.create({
                 name: `${dataToSave.name} - ${variant.color}`,
                 description: `${dataToSave.description} - ${variant.color}`,
-                images: mainImageUrls,
+                images: [mainImageUrls],
                 default_price_data: {
                     unit_amount: parseFloat(dataToSave.price.replace('.', '')),
                     currency: 'eur',
@@ -97,10 +99,12 @@ export const saveProduct = async (dataToSave: any) => {
                 createdVariants.push({
                     priceId: (stripeVariant.default_price as any).id,
                     color: variant.color,
-                    images: variantImageUrls,
+                    images: variantImages,
                 });
             }
         }
+
+        const mainImage = mainImageUrls.split('/').pop();
 
         await Product.create({
             name: dataToSave.name,
@@ -108,7 +112,7 @@ export const saveProduct = async (dataToSave: any) => {
             price: dataToSave.price,
             category: dataToSave.category,
             sizes: dataToSave.sizes,
-            image: mainImageUrls,
+            image: "/" + mainImage,
             variants: createdVariants,
         });
 

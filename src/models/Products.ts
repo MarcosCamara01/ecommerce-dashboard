@@ -8,6 +8,7 @@ export interface Product {
     description: string;
     price: number;
     category: string;
+    _id: string;
 }
 
 export interface Variant {

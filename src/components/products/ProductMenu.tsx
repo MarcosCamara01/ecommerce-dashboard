@@ -19,9 +19,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
-import Stripe from 'stripe';
 
-const ProductMenu = ({ product }: { product: Stripe.Product }) => {
+const ProductMenu = () => {
   return (
     <AlertDialog>
       <DropdownMenu>
@@ -53,7 +52,6 @@ const ProductMenu = ({ product }: { product: Stripe.Product }) => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <button
-              onClick={() => console.log(product)}
               className='w-full text-left'
             >
               Edit product
@@ -71,7 +69,6 @@ const ProductMenu = ({ product }: { product: Stripe.Product }) => {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => console.log(product)}
             className='bg-[#181818] hover:bg-[#18181BE6]'
           >
             Delete

@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useTransition } from 'react';
 import { saveProduct } from '@/app/products/create/action';
 import { Input } from "@/components/ui/input"
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { toast } from 'sonner';
+import { Loader } from '../common/Loader';
 
 const CreateProduct: React.FC = () => {
     const [productData, setProductData] = useState({
@@ -17,10 +18,10 @@ const CreateProduct: React.FC = () => {
         sizes: '',
         image: null as FormData | null
     });
-
     const [variants, setVariants] = useState([
         { priceId: "", color: "", images: [null as FormData | null] }
     ]);
+    let [isPending, startTransition] = useTransition();
 
     const handleVariantImageChange = (e: ChangeEvent<HTMLInputElement>, variantIndex: number) => {
         const updatedVariants = [...variants];
@@ -91,17 +92,20 @@ const CreateProduct: React.FC = () => {
             variants: variants,
         };
 
-        const response = await saveProduct(dataToSubmit);
-
-        console.log(response)
-
-        if (response.error) {
-            console.error(response.error);
-            toast.error(response.error);
-        } else {
-            console.log(response.message);
-            toast.info(response.message);
-        }
+        startTransition(() => {
+            saveProduct(dataToSubmit).then(response => {
+                if (response.error) {
+                    console.error(response.error);
+                    toast.error(response.error);
+                } else {
+                    console.log(response.message);
+                    toast.info(response.message);
+                }
+            }).catch(error => {
+                console.error('Failed to save product.', error);
+                toast.error('Failed to save product.');
+            });
+        });
     };
 
     return (
@@ -151,8 +155,9 @@ const CreateProduct: React.FC = () => {
             {variants.map((variant, index) => (
                 <div
                     key={index}
-                    className='w-full flex flex-col gap-2.5'
+                    className='w-full py-3 flex flex-col gap-2.5 border-t border-solid border-gray-200'
                 >
+                    <h4 className='text-sm'>Variant {index + 1}</h4>
                     <div className="w-full flex flex-col gap-2.5">
                         <Input
                             placeholder='Color'
@@ -163,7 +168,7 @@ const CreateProduct: React.FC = () => {
                         />
                     </div>
                     <div className="w-full flex flex-col gap-2.5">
-                        <Label className='text-sm'>Variant Images (3):</Label>
+                        <Label className='text-sm'>Variant Images (max 3):</Label>
                         <Input
                             type="file"
                             name="variantImages"
@@ -172,17 +177,19 @@ const CreateProduct: React.FC = () => {
                         />
                     </div>
 
-                    <Button
-                        type="button"
-                        variant="destructive"
-                        className="my-3.5"
-                        onClick={() => removeVariant(index)}
-                    >
-                        Remove Variant
-                    </Button>
+                    {
+                        index !== 0 &&
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            className="mb-3.5"
+                            onClick={() => removeVariant(index)}
+                        >
+                            Remove Variant {index + 1}
+                        </Button>
+                    }
                 </div>
             ))}
-
 
             <Button
                 onClick={addVariant}
@@ -215,7 +222,9 @@ const CreateProduct: React.FC = () => {
                 type="submit"
                 className="bg-[#181818] hover:bg-[#18181BE6]"
             >
-                Create Product
+                {isPending
+                    ? <Loader height={20} width={20} />
+                    : "Create Product"}
             </Button>
         </form>
     );

@@ -8,13 +8,14 @@ import {
     Table
 } from "@/components/ui/table";
 import Header from '@/components/common/Header';
-import { getProducts } from '../action';
-import Image from 'next/image';
 import ProductMenu from '@/components/products/ProductMenu';
 import Link from 'next/link';
+import { getProducts } from './action';
+import { Images } from '@/components/products/Images';
 
 export default async function Products() {
     const products = await getProducts();
+    console.log(products)
 
     return (
         <section className="w-full min-h-screen flex flex-col">
@@ -31,33 +32,37 @@ export default async function Products() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[80px]">Image</TableHead>
+                                <TableHead className="w-[80px] text-center">Image</TableHead>
                                 <TableHead className="max-w-[150px]">Name</TableHead>
-                                <TableHead className="hidden md:table-cell">Status</TableHead>
-                                <TableHead className="hidden md:table-cell">Created</TableHead>
-                                <TableHead>Updated</TableHead>
+                                <TableHead className="text-center hidden md:table-cell">Price</TableHead>
+                                <TableHead className="text-center hidden md:table-cell">Variants</TableHead>
+                                <TableHead className='text-center'>Sizes</TableHead>
+                                <TableHead className='text-center'>Category</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {
-                                products.map((product) => (
-                                    <TableRow key={product.id}>
+                                products?.map((product, index) => (
+                                    <TableRow key={product._id}>
                                         <TableCell>
-                                            <Image
-                                                alt="Product image"
-                                                className="aspect-square rounded-md object-cover"
-                                                height={48}
+                                            <Images
+                                                src={product.image}
+                                                name={product.name}
                                                 width={48}
-                                                src={product.images[0]}
+                                                height={48}
+                                                priority={index === 0 ? true : false}
                                             />
                                         </TableCell>
                                         <TableCell className="font-medium">{product.name}</TableCell>
-                                        <TableCell className="hidden md:table-cell">{product.active ? "Active" : "Inactive"}</TableCell>
-                                        <TableCell>{new Date(product.created * 1000).toLocaleDateString()}</TableCell>
-                                        <TableCell className="hidden md:table-cell">{new Date(product.updated * 1000).toLocaleDateString()}</TableCell>
+                                        <TableCell className="hidden text-center md:table-cell">{product.price}€</TableCell>
+                                        <TableCell className='text-center'>{product.variants.length}</TableCell>
+                                        <TableCell className='text-center'>
+                                            {product.sizes.join(', ')}
+                                        </TableCell>
+                                        <TableCell className="text-center hidden md:table-cell">{product.category}</TableCell>
                                         <TableCell className="text-right">
-                                            <ProductMenu product={product} />
+                                            <ProductMenu />
                                         </TableCell>
                                     </TableRow>
                                 ))
