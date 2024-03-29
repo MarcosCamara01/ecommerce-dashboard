@@ -70,7 +70,12 @@ const ProductMenu = ({ product }: { product: Stripe.Product }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => console.log(product)} className='bg-[#181818] hover:bg-[#18181BE6]'>Delete</AlertDialogAction>
+          <AlertDialogAction
+            onClick={() => console.log(product)}
+            className='bg-[#181818] hover:bg-[#18181BE6]'
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -6,6 +6,13 @@ import { v2 as cloudinary } from 'cloudinary';
 import Stripe from "stripe";
 
 export const saveImage = async (formData: any) => {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        return {
+            error: 'Missing Cloudinary configuration',
+            status: 500
+        };
+    }
+
     cloudinary.config({
         cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
         api_key: process.env.CLOUDINARY_API_KEY,
@@ -13,31 +20,44 @@ export const saveImage = async (formData: any) => {
     });
 
     try {
-        const data = await formData;
-        const image: any = data.get("image");
+        if (!(formData instanceof FormData)) {
+            return {
+                error: 'Invalid FormData object',
+                status: 400
+            };
+        }
+
+        const image = formData.get("image");
 
         if (!image) {
             return {
-                error: 'No image found'
-            }
+                error: 'No image found',
+                status: 400
+            };
         }
 
-        const bytes = await image.arrayBuffer();
+        const blob = new Blob([image]);
+        const bytes = await blob.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
         const response: any = await new Promise((resolve, reject) => {
             cloudinary.uploader.upload_stream({}, (err, result) => {
                 if (err) {
-                    reject(err)
+                    console.error('Error uploading image to Cloudinary:', err);
+                    reject(err);
                 }
-                resolve(result)
+                resolve(result);
             }).end(buffer);
-        })
+        });
 
-        return {
-            message: "Image saved",
-            url: response.secure_url
-        };
+        if (!response || !response.secure_url) {
+            return {
+                error: 'Failed to upload image to Cloudinary',
+                status: 500
+            };
+        }
+
+        return response.secure_url;
 
     } catch (error) {
         console.error('Failed to save image.', error);
@@ -45,33 +65,55 @@ export const saveImage = async (formData: any) => {
     }
 }
 
-export const saveProduct = async (dataToSave: Product) => {
-    console.log(dataToSave)
+export const saveProduct = async (dataToSave: any) => {
     try {
-        db();
+        await db();
+
+        const mainImageUrls = await saveImage(dataToSave.image);
 
         const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
             apiVersion: '2023-10-16',
         });
 
-        const stripeProduct = await stripe.products.create({
+        const createdVariants = [];
+
+        for (const variant of dataToSave.variants) {
+            const variantImageUrls = await Promise.all(variant.images.map(async (image: any) => {
+                return await saveImage(image);
+            }));
+
+            const stripeVariant = await stripe.products.create({
+                name: `${dataToSave.name} - ${variant.color}`,
+                description: `${dataToSave.description} - ${variant.color}`,
+                images: mainImageUrls,
+                default_price_data: {
+                    unit_amount: parseFloat(dataToSave.price.replace('.', '')),
+                    currency: 'eur',
+                },
+                expand: ['default_price'],
+            });
+
+            if (stripeVariant?.default_price) {
+                createdVariants.push({
+                    priceId: (stripeVariant.default_price as any).id,
+                    color: variant.color,
+                    images: variantImageUrls,
+                });
+            }
+        }
+
+        await Product.create({
             name: dataToSave.name,
             description: dataToSave.description,
-            images: dataToSave.image,
-            default_price_data: {
-                unit_amount: dataToSave.price,
-                currency: 'eur',
-            },
-            expand: ['default_price'],
-            url: process.env.ECOMMERCE_URL + "/" + dataToSave.category
+            price: dataToSave.price,
+            category: dataToSave.category,
+            sizes: dataToSave.sizes,
+            image: mainImageUrls,
+            variants: createdVariants,
         });
 
-        console.log(stripeProduct);
+        return { message: 'Product saved successfully.', status: 200 };
 
-        const product = await Product.create(dataToSave);
-        console.log(product);
-
-        return product;
     } catch (error) {
         console.error('Failed to save product.', error);
         return { error: 'Failed to save product.', status: 500 };

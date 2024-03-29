@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { saveImage, saveProduct } from '@/app/products/create/action';
+import { saveProduct } from '@/app/products/create/action';
 import { Input } from "@/components/ui/input"
-import { Variant } from '@/models/Products';
 import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { Label } from '@radix-ui/react-dropdown-menu';
+import { toast } from 'sonner';
 
 const CreateProduct: React.FC = () => {
     const [productData, setProductData] = useState({
@@ -15,49 +15,51 @@ const CreateProduct: React.FC = () => {
         price: 0,
         category: '',
         sizes: '',
-        image: []
+        image: null as FormData | null
     });
-    const [variants, setVariants] = useState<Variant[]>([]);
 
-    const uploadImages = async (e: ChangeEvent<HTMLInputElement>, callback: (newImageUrls: string[]) => void) => {
-        try {
-            const files = e.target.files;
-            const newImageUrls: string[] = [];
+    const [variants, setVariants] = useState([
+        { priceId: "", color: "", images: [null as FormData | null] }
+    ]);
 
-            if (files) {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const formData = new FormData();
-                    formData.append("image", file);
-                    const response = await saveImage(formData);
-                    if (response.error) {
-                        console.log(response.error);
-                    } else {
-                        const urlParts = response.url.split('/');
-                        newImageUrls.push(`/${urlParts[urlParts.length - 1]}`);
-                    }
-                }
+    const handleVariantImageChange = (e: ChangeEvent<HTMLInputElement>, variantIndex: number) => {
+        const updatedVariants = [...variants];
+        const files = e.target.files;
+
+        if (files) {
+            const formDataArray: FormData[] = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const formData = new FormData();
+                formData.append('image', files[i]);
+                formDataArray.push(formData);
             }
 
-            callback(newImageUrls);
-        } catch (error) {
-            console.error('Failed to save the images.', error);
+            updatedVariants[variantIndex].images = formDataArray;
+            setVariants(updatedVariants);
         }
     };
 
-    const handleVariantImageChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
-        const updatedVariants = [...variants];
-        updatedVariants[index].images = [e.target.value];
-        setVariants(updatedVariants);
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value, type } = e.target;
+        if (type === 'file') {
+            const file = (e.target as HTMLInputElement).files?.[0];
+            const formData = new FormData();
+            if (file) {
+                formData.append('image', file);
+            }
+            setProductData((prevData) => ({
+                ...prevData,
+                image: formData,
+            }));
+        } else {
+            setProductData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
 
-    const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setProductData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
 
     const handleVariantChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
         const { name, value } = e.target;
@@ -69,7 +71,7 @@ const CreateProduct: React.FC = () => {
     };
 
     const addVariant = () => {
-        setVariants([...variants, { priceId: '', color: '' }]);
+        setVariants([...variants, { priceId: '', color: '', images: [] }]);
     };
 
     const removeVariant = (index: number) => {
@@ -81,25 +83,24 @@ const CreateProduct: React.FC = () => {
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 
-        try {
-            const sizesArray = productData.sizes.split(',');
+        const sizesArray = productData.sizes.split(',');
 
-            const dataToSubmit = {
-                ...productData,
-                sizes: sizesArray,
-                variants: variants,
-            };
+        const dataToSubmit = {
+            ...productData,
+            sizes: sizesArray,
+            variants: variants,
+        };
 
-            const response = await saveProduct(dataToSubmit);
+        const response = await saveProduct(dataToSubmit);
 
-            if (response.error) {
-                console.error(response.error);
-            } else {
-                console.log(response)
-                console.log('Product created successfully!');
-            }
-        } catch (error) {
-            console.error('Failed to create product.', error);
+        console.log(response)
+
+        if (response.error) {
+            console.error(response.error);
+            toast.error(response.error);
+        } else {
+            console.log(response.message);
+            toast.info(response.message);
         }
     };
 
@@ -162,7 +163,7 @@ const CreateProduct: React.FC = () => {
                         />
                     </div>
                     <div className="w-full flex flex-col gap-2.5">
-                        <Label className='text-sm'>Variant Images:</Label>
+                        <Label className='text-sm'>Variant Images (3):</Label>
                         <Input
                             type="file"
                             name="variantImages"
