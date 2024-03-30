@@ -30,11 +30,11 @@ export const Images = (
                 src={src[0]}
                 alt={name}
                 priority={priority}
-                className="w-full max-w-img aspect-[2/3] brightness-90 rounded-md object-cover"
+                className="aspect-[2/3] rounded-md brightness-90"
                 onLoad={handleImageLoadComplete}
             />
-            <div className={!imageLoaded ? 'absolute top-0 right-0 w-full aspect-[2/3] bg-black' : 'hidden'}>
-                <Skeleton className="w-full aspect-[2/3] rounded-b-none" />
+            <div className={!imageLoaded ? 'rounded-md absolute top-0 right-0 w-full aspect-[2/3] bg-black' : 'hidden'}>
+                <Skeleton className="w-full aspect-[2/3]" />
             </div>
         </div>
     )

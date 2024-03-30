@@ -1,10 +1,3 @@
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenuTrigger,
-    DropdownMenuItem,
-    DropdownMenuContent,
-    DropdownMenu
-} from "@/components/ui/dropdown-menu";
 import {
     TableHead,
     TableRow,
@@ -13,10 +6,13 @@ import {
     TableBody,
     Table
 } from "@/components/ui/table";
-import { FiMoreHorizontal } from "react-icons/fi";
 import Header from "@/components/common/Header";
 import { getOrders } from "../action";
-import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const OrdersMenu = dynamic(() => import('../../components/orders/OrdersMenu'), {
+    ssr: false,
+});
 
 export default async function Orders() {
     const orders = await getOrders();
@@ -30,10 +26,10 @@ export default async function Orders() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px]">Order Number</TableHead>
-                                <TableHead className="min-w-[150px]">Customer</TableHead>
-                                <TableHead className="hidden md:table-cell">Date</TableHead>
-                                <TableHead className="min-w-[100px]">Total</TableHead>
-                                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                                <TableHead className="min-w-[150px] text-center">Customer</TableHead>
+                                <TableHead className="hidden md:table-cell text-center">Date</TableHead>
+                                <TableHead className="min-w-[100px] text-center">Total</TableHead>
+                                <TableHead className="hidden sm:table-cell text-center">Status</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -41,31 +37,14 @@ export default async function Orders() {
                             {orders.map((order) => (
                                 <TableRow key={order.id}>
                                     <TableCell className="font-medium">{order.id}</TableCell>
-                                    <TableCell>{order.billing_details.name}</TableCell>
-                                    <TableCell className="hidden md:table-cell">{new Date(order.created * 1000).toLocaleDateString()}</TableCell>
-                                    <TableCell>{`${(order.amount / 100).toFixed(2)}€`}</TableCell>
-                                    <TableCell className="hidden sm:table-cell">{order.status}</TableCell>
-                                    <TableCell className="text-right">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button size="icon" variant="ghost">
-                                                    <FiMoreHorizontal className="w-4 h-4" />
-                                                    <span className="sr-only">Actions</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                {
-                                                    order.receipt_url ?
-                                                        <DropdownMenuItem>
-                                                            <Link className="w-full h-full" href={order.receipt_url} target="_blank">
-                                                                View receipt
-                                                            </Link>
-                                                        </DropdownMenuItem>
-                                                        : ""
-                                                }
-                                                <DropdownMenuItem>Customer details</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                    <TableCell className="text-center">{order.billing_details.name}</TableCell>
+                                    <TableCell className="hidden md:table-cell text-center">{new Date(order.created * 1000).toLocaleDateString()}</TableCell>
+                                    <TableCell className="text-center">
+                                        {`${(order.amount / 100).toFixed(2)}€`}
+                                    </TableCell>
+                                    <TableCell className="hidden sm:table-cell text-center">{order.status}</TableCell>
+                                    <TableCell className="text-right h-[73px]">
+                                        <OrdersMenu receipt_url={JSON.stringify(order.receipt_url)} />
                                     </TableCell>
                                 </TableRow>
                             ))}

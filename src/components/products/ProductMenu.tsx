@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useTransition } from 'react';
 import {
   DropdownMenuTrigger,
   DropdownMenuItem,
@@ -19,8 +19,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
+import { deleteProduct } from '@/app/products/action';
+import { Loader } from '../common/Loader';
+import { Product } from '@/models/Products';
 
-const ProductMenu = () => {
+const ProductMenu = ({ productString }: { productString: string }) => {
+  let [isPending, startTransition] = useTransition();
+  const product: Product = JSON.parse(productString);
+
   return (
     <AlertDialog>
       <DropdownMenu>
@@ -70,8 +76,15 @@ const ProductMenu = () => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className='bg-[#181818] hover:bg-[#18181BE6]'
+            onClick={() => {
+              startTransition(() => {
+                deleteProduct(product);
+              })
+            }}
           >
-            Delete
+            {isPending
+              ? <Loader height={20} width={20} />
+              : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -3,6 +3,7 @@
 import { db } from '@/lib/db';
 import { Product } from '@/models/Products';
 import { v2 as cloudinary } from 'cloudinary';
+import { revalidatePath } from 'next/cache';
 import Stripe from "stripe";
 
 export const saveImage = async (formData: any) => {
@@ -115,6 +116,8 @@ export const saveProduct = async (dataToSave: any) => {
             image: "/" + mainImage,
             variants: createdVariants,
         });
+
+        revalidatePath("/products");
 
         return { message: 'Product saved successfully.', status: 200 };
 

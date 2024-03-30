@@ -11,13 +11,20 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { SignOutButton } from '../auth/SignOutButton';
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import CreateUser from '../auth/CreateUser';
+import dynamic from 'next/dynamic';
+
+const CreateUser = dynamic(() => import('../auth/CreateUser'), {
+    ssr: false,
+});
+
+const SignOutButton = dynamic(() => import('../auth/SignOutButton'), {
+    ssr: false,
+});
 
 const Header = async ({ title }: { title: string }) => {
     const session: Session | null = await getServerSession(authOptions);

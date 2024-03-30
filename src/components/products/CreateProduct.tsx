@@ -168,7 +168,7 @@ const CreateProduct: React.FC = () => {
                         />
                     </div>
                     <div className="w-full flex flex-col gap-2.5">
-                        <Label className='text-sm'>Variant Images (max 3):</Label>
+                        <Label className='text-sm'>Variant Images (4):</Label>
                         <Input
                             type="file"
                             name="variantImages"

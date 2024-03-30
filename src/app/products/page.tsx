@@ -8,14 +8,17 @@ import {
     Table
 } from "@/components/ui/table";
 import Header from '@/components/common/Header';
-import ProductMenu from '@/components/products/ProductMenu';
 import Link from 'next/link';
 import { getProducts } from './action';
 import { Images } from '@/components/products/Images';
+import dynamic from 'next/dynamic';
+
+const ProductMenu = dynamic(() => import('../../components/products/ProductMenu'), {
+    ssr: false,
+});
 
 export default async function Products() {
     const products = await getProducts();
-    console.log(products)
 
     return (
         <section className="w-full min-h-screen flex flex-col">
@@ -44,13 +47,13 @@ export default async function Products() {
                         <TableBody>
                             {
                                 products?.map((product, index) => (
-                                    <TableRow key={product._id}>
+                                    <TableRow key={index}>
                                         <TableCell>
                                             <Images
                                                 src={product.image}
                                                 name={product.name}
                                                 width={48}
-                                                height={48}
+                                                height={72}
                                                 priority={index === 0 ? true : false}
                                             />
                                         </TableCell>
@@ -62,7 +65,7 @@ export default async function Products() {
                                         </TableCell>
                                         <TableCell className="text-center hidden md:table-cell">{product.category}</TableCell>
                                         <TableCell className="text-right">
-                                            <ProductMenu />
+                                            <ProductMenu productString={JSON.stringify(product)} />
                                         </TableCell>
                                     </TableRow>
                                 ))
