@@ -8,11 +8,7 @@ import {
 } from "@/components/ui/table";
 import Header from "@/components/common/Header";
 import { getOrders } from "../action";
-import dynamic from "next/dynamic";
-
-const OrdersMenu = dynamic(() => import('../../components/orders/OrdersMenu'), {
-    ssr: false,
-});
+import OrdersMenu from "@/components/orders/OrdersMenu";
 
 export default async function Orders() {
     const orders = await getOrders();
@@ -44,7 +40,7 @@ export default async function Orders() {
                                     </TableCell>
                                     <TableCell className="hidden sm:table-cell text-center">{order.status}</TableCell>
                                     <TableCell className="text-right h-[73px]">
-                                        <OrdersMenu receipt_url={JSON.stringify(order.receipt_url)} />
+                                        <OrdersMenu orderString={JSON.stringify(order)} />
                                     </TableCell>
                                 </TableRow>
                             ))}
