@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import {
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { UserDocument } from '@/models/User';
 import axios from 'axios';
@@ -30,56 +22,36 @@ const CreateUser = () => {
     };
 
     return (
-        <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-                <DialogTitle>New user</DialogTitle>
-                <DialogDescription>
-                    Create a user here. Click save when you're done.
-                </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                        Name
-                    </Label>
-                    <Input
-                        id="name"
-                        className="col-span-3"
-                        onChange={(e) => setUser({ ...user, name: e.target.value })}
-                    />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                        Email
-                    </Label>
-                    <Input
-                        id="email"
-                        className="col-span-3"
-                        onChange={(e) => setUser({ ...user, email: e.target.value })}
-                    />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="password" className="text-right">
-                        Password
-                    </Label>
-                    <Input
-                        id="password"
-                        type='password'
-                        className="col-span-3"
-                        onChange={(e) => setUser({ ...user, password: e.target.value })}
-                    />
-                </div>
+        <div className="sm:max-w-[425px] h-full p-5 flex flex-col justify-center mx-auto">
+            <div className="grid gap-4 py-4 min-w-[300px]">
+                <Input
+                    id="name"
+                    placeholder='Name'
+                    className="col-span-3"
+                    onChange={(e) => setUser({ ...user, name: e.target.value })}
+                />
+                <Input
+                    id="email"
+                    placeholder='Email'
+                    className="col-span-3"
+                    onChange={(e) => setUser({ ...user, email: e.target.value })}
+                />
+                <Input
+                    id="password"
+                    placeholder='Password'
+                    type='password'
+                    className="col-span-3"
+                    onChange={(e) => setUser({ ...user, password: e.target.value })}
+                />
             </div>
-            <DialogFooter>
-                <Button
-                    onClick={createUser}
-                    className='bg-[#181818] hover:bg-[#18181BE6]'
-                    type="submit"
-                >
-                    Save changes
-                </Button>
-            </DialogFooter>
-        </DialogContent>
+            <Button
+                onClick={createUser}
+                className='bg-[#181818] hover:bg-[#18181BE6]'
+                type="submit"
+            >
+                Save changes
+            </Button>
+        </div>
     )
 }
 

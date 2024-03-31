@@ -22,14 +22,12 @@ const OrderDetails = ({ order }: { order: Stripe.Charge }) => {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-2">
-                <div className='flex items-center justify-between gap-3'>
-                    <p className='text-sm text-muted-foreground'>
-                        {`${(order.amount / 100).toFixed(2)}€`}
-                    </p>
-                    <p className='text-sm text-muted-foreground'>
-                        {new Date(order.created * 1000).toLocaleDateString()}
-                    </p>
-                </div>
+                <p className='text-sm text-muted-foreground'>
+                    {`${(order.amount / 100).toFixed(2)}€`}
+                </p>
+                <p className='text-sm text-muted-foreground'>
+                    {new Date(order.created * 1000).toLocaleDateString()}
+                </p>
                 {
                     order.billing_details.phone &&
                     <p className='text-sm text-muted-foreground'>

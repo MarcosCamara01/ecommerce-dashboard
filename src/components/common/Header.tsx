@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import dynamic from 'next/dynamic';
 
-const CreateUser = dynamic(() => import('../auth/CreateUser'), {
+const EditUser = dynamic(() => import('../auth/EditUser'), {
     ssr: false,
 });
 
@@ -58,15 +58,19 @@ const Header = async ({ title }: { title: string }) => {
                         {
                             session?.user?.email === "marcospenelascamara@gmail.com" ?
                                 <DropdownMenuItem>
-                                    <DialogTrigger asChild>
-                                        <button className='w-full h-full text-left'>
-                                            New user
-                                        </button>
-                                    </DialogTrigger>
+                                    <Link href="/new-user" className='w-full h-full text-left'>
+                                        New user
+                                    </Link>
                                 </DropdownMenuItem>
                                 : ""
                         }
-                        <DropdownMenuItem>Edit profile</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <DialogTrigger asChild>
+                                <button className='w-full h-full text-start'>
+                                    Edit profile
+                                </button>
+                            </DialogTrigger>
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Support</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
@@ -74,7 +78,7 @@ const Header = async ({ title }: { title: string }) => {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <CreateUser />
+                <EditUser />
             </Dialog>
         </header>
     )

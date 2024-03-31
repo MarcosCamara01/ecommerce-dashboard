@@ -30,7 +30,8 @@
     "stripe": "^14.20.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "ua-parser-js": "^1.0.37"
+    "ua-parser-js": "^1.0.37",
+    "vaul": "^0.9.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
