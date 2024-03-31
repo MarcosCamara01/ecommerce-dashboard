@@ -38,8 +38,8 @@ const Sidebar = () => {
     const activeSegment = useSelectedLayoutSegment()
 
     return (
-        <div className='flex flex-col h-full p-3'>
-            <nav className="w-full hidden lg:flex flex-col gap-1">
+        <div className='flex flex-col h-full p-3 border-r border-solid border-gray-200'>
+            <nav className="sticky top-3 w-full hidden lg:flex flex-col gap-1">
                 {items.map((item) => (
                     <Link
                         key={item.activeSegment}
