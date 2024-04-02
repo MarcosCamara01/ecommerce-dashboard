@@ -10,18 +10,18 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserDocument } from "@/models/PrivateUser";
+import { PrivateUserDocument } from "@/models/PrivateUser";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 
 export default function EditUser() {
-    const [user, setUser] = useState<UserDocument>({} as UserDocument);
+    const [user, setUser] = useState<PrivateUserDocument>({} as PrivateUserDocument);
     const { data: session, update } = useSession();
 
     useEffect(() => {
         if (session && session.user) {
-            setUser(session.user as UserDocument);
+            setUser(session.user as PrivateUserDocument);
         }
     }, [session]);
     
