@@ -28,7 +28,7 @@ export default async function RootLayout({
         <body className={inter.className}>
           {
             session?.user ?
-              <main className="grid min-h-screen gap-0 lg:grid-cols-[280px_1fr]">
+              <main className="lg:grid min-h-screen gap-0 lg:grid-cols-[280px_1fr]">
                 <Sidebar />
                 {children}
               </main>

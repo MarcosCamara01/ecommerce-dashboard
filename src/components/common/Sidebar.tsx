@@ -11,26 +11,22 @@ const Sidebar = () => {
     const items = [
         {
             title: 'Orders',
-            href: '/orders',
-            activeSegment: 'orders',
+            name: 'orders',
             icon: <FaShoppingCart className="h-4 w-4" />
         },
         {
             title: 'Products',
-            href: '/products',
-            activeSegment: 'products',
+            name: 'products',
             icon: <FiPackage className="h-4 w-4" />
         },
         {
             title: 'Customers',
-            href: '/customers',
-            activeSegment: 'customers',
+            name: 'customers',
             icon: <LuUsers className="h-4 w-4" />
         },
         {
             title: 'Analytics',
-            href: '/analytics',
-            activeSegment: 'analytics',
+            name: 'analytics',
             icon: <FaChartLine className="h-4 w-4" />
         },
     ];
@@ -38,17 +34,17 @@ const Sidebar = () => {
     const activeSegment = useSelectedLayoutSegment()
 
     return (
-        <div className='flex flex-col h-full p-3 border-r border-solid border-gray-200'>
-            <nav className="sticky top-3 w-full hidden lg:flex flex-col gap-1">
-                {items.map((item) => (
+        <div className='flex flex-col h-full p-3 border-b lg:border-r border-solid border-gray-200'>
+            <nav className="w-full lg:sticky lg:top-3 flex flex-col gap-1">
+                {items.map((item, index) => (
                     <Link
-                        key={item.activeSegment}
-                        href={item.href}
+                        key={index}
+                        href={"/" + item.name}
                         className={
-                            activeSegment === item.activeSegment
-                                ? 'flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 text-gray-900 transition-all hover:text-gray-900 dark:bg-gray-800 dark:text-gray-50 dark:hover:text-gray-50'
-                                : 'flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50'}
-                    >   
+                            activeSegment === item.name
+                                ? 'flex items-center gap-3 rounded-lg bg-gray-100 px-3 py-2 transition-all'
+                                : 'flex items-center gap-3 rounded-lg px-3 py-2 text-[#64748B] transition-all hover:text-[#181818] hover:bg-gray-100'}
+                    >
                         {item.icon}
                         {item.title}
                     </Link>
