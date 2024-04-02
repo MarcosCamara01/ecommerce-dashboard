@@ -1,5 +1,5 @@
 import { db } from "./db";
-import User from "../models/User";
+import PrivateUser from "../models/PrivateUser";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions  = {
       },
       async authorize(credentials) {
         await db();
-        const userFound = await User.findOne({
+        const userFound = await PrivateUser.findOne({
           email: credentials?.email,
         }).select("+password");
 

@@ -1,5 +1,5 @@
 import { db } from "../../../../lib/db";
-import User from "../../../../models/User";
+import PrivateUser from "../../../../models/PrivateUser";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const userFound = await User.findOne({ email });
+    const userFound = await PrivateUser.findOne({ email });
 
     if (userFound) {
       return NextResponse.json(
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = new User({
+    const user = new PrivateUser({
       name,
       email,
       password: hashedPassword,
@@ -71,7 +71,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    const userToUpdate = await User.findById(userId);
+    const userToUpdate = await PrivateUser.findById(userId);
 
     if (!userToUpdate) {
       return NextResponse.json(
@@ -129,7 +129,7 @@ export async function DELETE(request: Request) {
 
     const { userId } = await request.json();
 
-    const user = await User.findById(userId);
+    const user = await PrivateUser.findById(userId);
 
     if (!user) {
       return NextResponse.json(

@@ -1,4 +1,4 @@
-import { UserDocument } from "@/models/User";
+import { UserDocument } from "@/models/PrivateUser";
 import { Session } from "next-auth";
 
 declare module "next-auth" {

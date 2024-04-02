@@ -1,6 +1,6 @@
 import { Schema, model, models } from "mongoose";
 
-export interface UserDocument {
+export interface PrivateUserDocument {
   email: string;
   password: string;
   name: string;
@@ -9,7 +9,7 @@ export interface UserDocument {
   updatedAt: Date;
 }
 
-const UserSchema = new Schema<UserDocument>({
+const PrivateUserSchema = new Schema<PrivateUserDocument>({
   email: {
     type: String,
     unique: true,
@@ -36,5 +36,5 @@ const UserSchema = new Schema<UserDocument>({
   }
 );
 
-const User = models.User || model<UserDocument>('User', UserSchema);
-export default User;
+const PrivateUser = models.PrivateUser || model<PrivateUserDocument>('PrivateUser', PrivateUserSchema);
+export default PrivateUser;
