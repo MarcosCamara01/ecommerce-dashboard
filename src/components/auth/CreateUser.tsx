@@ -1,57 +1,68 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { FormEvent } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { UserDocument } from '@/models/User';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 const CreateUser = () => {
-    const [user, setUser] = useState<UserDocument>({} as UserDocument);
+    const createUser = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-    const createUser = async () => {
+        const formData = new FormData(event.currentTarget);
+
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/auth/signup`, user);
-            if (response.status !== 200) {
-                console.error(response.data.message);
-                alert(response.data.message);
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api/auth/signup`, {
+                name: formData.get("name"),
+                email: formData.get("email"),
+                password: formData.get("password"),
+            });
+            
+            console.log(response);
+        } catch (error: any) {
+            if (error instanceof AxiosError) {
+                console.error(error.response?.data.message);
+                alert(error.response?.data.message);
+            } else {
+                console.error(error);
+                alert(error);
             }
-        } catch (error) {
-            console.error('Error creating user:', error);
         }
     };
 
     return (
-        <div className="sm:max-w-[425px] h-full p-5 flex flex-col justify-center mx-auto">
+        <form
+            className="sm:max-w-[425px] h-full p-5 flex flex-col justify-center mx-auto"
+            onSubmit={createUser}
+        >
             <div className="grid gap-4 py-4 min-w-[300px]">
                 <Input
                     id="name"
                     placeholder='Name'
+                    name="name"
                     className="col-span-3"
-                    onChange={(e) => setUser({ ...user, name: e.target.value })}
                 />
                 <Input
                     id="email"
                     placeholder='Email'
+                    name="email"
                     className="col-span-3"
-                    onChange={(e) => setUser({ ...user, email: e.target.value })}
                 />
                 <Input
                     id="password"
                     placeholder='Password'
+                    name="password"
                     type='password'
                     className="col-span-3"
-                    onChange={(e) => setUser({ ...user, password: e.target.value })}
                 />
             </div>
             <Button
-                onClick={createUser}
                 className='bg-[#181818] hover:bg-[#18181BE6]'
                 type="submit"
             >
                 Save changes
             </Button>
-        </div>
+        </form>
     )
 }
 
