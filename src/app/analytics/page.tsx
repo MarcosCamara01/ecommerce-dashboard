@@ -1,6 +1,6 @@
 import Header from '@/components/common/Header';
 import React from 'react';
-import { calculateEarningsPerMonth } from '../action';
+import { calculateBuyersPerMonth, calculateEarningsPerMonth, totalBalance } from '../action';
 import StackedbarChart from '@/components/analytics/Charts';
 import {
     CardDescription,
@@ -12,10 +12,12 @@ import {
 
 export default async function Analytics() {
     const earnings = await calculateEarningsPerMonth();
+    const buyers = await calculateBuyersPerMonth();
+    const balance = await totalBalance();
 
-    let totalSales = 0;
-    for (const key in earnings) {
-        totalSales += earnings[key];
+    let totalBuyers = 0;
+    for (const key in buyers) {
+        totalBuyers += buyers[key];
     }
 
     return (
@@ -28,11 +30,24 @@ export default async function Analytics() {
                         <Card className="flex flex-col">
                             <CardHeader>
                                 <CardDescription>Total Sales</CardDescription>
-                                <CardTitle>{totalSales.toFixed(2)} €</CardTitle>
+                                <CardTitle>{balance.toFixed(2)} €</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <StackedbarChart
-                                    dataSting={JSON.stringify(earnings)}
+                                    dataString={JSON.stringify(earnings)}
+                                    dataType="sales"
+                                />
+                            </CardContent>
+                        </Card>
+                        <Card className="flex flex-col">
+                            <CardHeader>
+                                <CardDescription>Total Buyers</CardDescription>
+                                <CardTitle>{totalBuyers} Buyers in total</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <StackedbarChart
+                                    dataString={JSON.stringify(buyers)}
+                                    dataType="buyers"
                                 />
                             </CardContent>
                         </Card>

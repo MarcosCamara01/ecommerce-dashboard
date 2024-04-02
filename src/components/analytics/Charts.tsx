@@ -3,23 +3,32 @@
 import React from 'react';
 import { ResponsiveBar } from "@nivo/bar";
 
-export default function StackedbarChart({ dataSting }: { dataSting: string }) {
-    const order: { [key: string]: number } = JSON.parse(dataSting);
+type DataType = {
+    [key: string]: number;
+};
 
-    const orderData = Object.entries(order).map(([date, price]) => ({
+type Props = {
+    dataString: string;
+    dataType: 'sales' | 'buyers';
+};
+
+const StackedbarChart: React.FC<Props> = ({ dataString, dataType }) => {
+    const data: DataType = JSON.parse(dataString);
+
+    const dataFormatted = Object.entries(data).map(([date, value]) => ({
         date,
-        sales: parseFloat(price.toFixed(2))
+        [dataType]: parseFloat(value.toFixed(2))
     }));
 
     return (
         <div className='aspect-[4/3]'>
             <ResponsiveBar
-                data={orderData}
-                keys={["sales"]}
+                data={dataFormatted}
+                keys={[dataType]}
                 indexBy="date"
                 margin={{ top: 20, right: 20, bottom: 50, left: 60 }}
                 padding={0.3}
-                colors={["#2563eb"]}
+                colors={["#181818"]}
                 axisBottom={{
                     tickSize: 0,
                     tickPadding: 16,
@@ -46,11 +55,13 @@ export default function StackedbarChart({ dataSting }: { dataSting: string }) {
                         },
                     },
                 }}
-                tooltipLabel={({ id }) => `${id} (euros)`}
+                tooltipLabel={({ id }) => `${id} ${dataType === "sales" ? "(euros)" : ""}`}
                 enableLabel={false}
                 role="application"
                 ariaLabel="A stacked bar chart"
             />
         </div>
-    )
-}
+    );
+};
+
+export default StackedbarChart;

@@ -22,33 +22,73 @@ export const getCustomers = async () => {
 }
 
 export const calculateEarningsPerMonth = async () => {
-  const response = await stripe.charges.list({ limit: 100 });
-  const orders = response.data;
+  const balanceTransactions = await stripe.balanceTransactions.list({
+    limit: 100,
+  });
 
   const earningsPerMonth: { [key: string]: number } = {};
   const currentDate = new Date();
 
   const fiveMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
-  const filteredOrders = orders.filter(order => {
-      const orderDate = new Date(order.created * 1000);
-      return orderDate >= fiveMonthsAgo;
+
+  balanceTransactions.data.forEach(transaction => {
+    const transactionDate = new Date(transaction.created * 1000);
+    if (transactionDate >= fiveMonthsAgo && transaction.amount > 0) {
+      const monthKey = transactionDate.toISOString().slice(0, 7);
+      earningsPerMonth[monthKey] = (earningsPerMonth[monthKey] || 0) + transaction.amount / 100;
+    }
   });
 
-  for (let i = 0; i < filteredOrders.length; i++) {
-      const order = filteredOrders[i];
-      const orderDate = new Date(order.created * 1000);
-      const monthKey = orderDate.toISOString().slice(0, 7); // Formato AAAA-MM
-      earningsPerMonth[monthKey] = (earningsPerMonth[monthKey] || 0) + order.amount / 100;
-  }
+  const orderedEarningsPerMonth: { [key: string]: number } = {};
 
   const filteredKeys = Object.keys(earningsPerMonth).filter(key => !isNaN(earningsPerMonth[key]));
 
   filteredKeys.sort();
 
-  const orderedEarningsPerMonth: { [key: string]: number } = {};
   filteredKeys.forEach(key => {
-      orderedEarningsPerMonth[key] = earningsPerMonth[key];
+    orderedEarningsPerMonth[key] = earningsPerMonth[key];
   });
 
   return orderedEarningsPerMonth;
 };
+
+
+export const calculateBuyersPerMonth = async () => {
+  const customers = await stripe.customers.list({
+    limit: 100,
+  });
+
+  const usersPerMonth: { [key: string]: number } = {};
+  const currentDate = new Date();
+
+  const fiveMonthsAgo = new Date(currentDate.getFullYear(), currentDate.getMonth() - 5, 1);
+
+  customers.data.forEach(customer => {
+    const customerCreatedDate = new Date(customer.created * 1000);
+    if (customerCreatedDate >= fiveMonthsAgo) {
+      const monthKey = customerCreatedDate.toISOString().slice(0, 7);
+      usersPerMonth[monthKey] = (usersPerMonth[monthKey] || 0) + 1;
+    }
+  });
+
+  const orderedUsersPerMonth: { [key: string]: number } = {};
+
+  const filteredKeys = Object.keys(usersPerMonth).filter(key => !isNaN(usersPerMonth[key]));
+
+  filteredKeys.sort();
+
+  filteredKeys.forEach(key => {
+    orderedUsersPerMonth[key] = usersPerMonth[key];
+  });
+
+  return orderedUsersPerMonth;
+};
+
+export const totalBalance = async () => {
+  const balance = await stripe.balance.retrieve();
+
+  const availableBalance = balance.available.reduce((total, item) => total + item.amount, 0);
+
+  const totalBalance = availableBalance / 100;
+  return totalBalance;
+}
